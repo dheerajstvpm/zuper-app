@@ -16,7 +16,7 @@
       @for (item of formFields(); track $index; let idx = $index) {
         <div
           (click)="onEdit(idx)"
-          class="flex justify-between items-center"
+          class="flex justify-between items-center overflow-auto"
           [ngClass]="item.class"
           cdkDrag
         >
@@ -79,7 +79,7 @@
                     [checked]="option === item.defaultValue"
                     [placeholder]="item.placeholder"
                   />
-                  <label [for]="option">{{ option }}</label>
+                  <label class="truncate" [matTooltip]="option" [for]="option">{{ option }}</label>
                 }
               </div>
             } @else if (item.fieldType === "checkbox") {
@@ -94,17 +94,19 @@
                     [checked]="option === item.defaultValue"
                     [placeholder]="item.placeholder"
                   />
-                  <label [for]="option">{{ option }}</label>
+                  <label class="truncate" [matTooltip]="option" [for]="option">{{ option }}</label>
                 }
               </div>
             } @else if (item.fieldType === "select") {
               <select
-                class="w-72 border border-stone-300 p-2 rounded"
+                class="truncate w-72 border border-stone-300 p-2 rounded"
                 name="item.fieldName"
                 id="item.fieldName"
+                [matTooltip]="item.fieldName"
               >
                 @for (option of item.options; track $index) {
                   <option
+                  class="truncate" [matTooltip]="option"
                     [value]="option"
                     [selected]="option === item.defaultValue"
                   >
