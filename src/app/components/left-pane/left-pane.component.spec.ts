@@ -8,9 +8,8 @@ describe('LeftPaneComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LeftPaneComponent]
-    })
-    .compileComponents();
+      imports: [LeftPaneComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(LeftPaneComponent);
     component = fixture.componentInstance;
