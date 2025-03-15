@@ -1,0 +1,93 @@
+<div class="relative h-full w-ful p-3">
+  <div
+    class="absolute top-1 right-1 bg-stone-200 text-stone-500 rounded rounded-full w-4 h-4 text-xs flex justify-center items-center cursor-pointer"
+    (click)="onClose()"
+  >
+    x
+  </div>
+  <div class="w-full flex flex-col gap-3 justify-start items-start">
+    <div
+      class="truncate w-full text-sm text-stone-500 font-semibold"
+      matTooltip="Update element"
+    >
+      Update element
+    </div>
+    <div>
+      <div class="truncate" matTooltip="Field name:">Field name:</div>
+      <input
+        class="w-full border border-stone-300 p-2 rounded"
+        [(ngModel)]="selectedFormField().fieldName"
+        placeholder="Enter field name"
+        (ngModelChange)="onChange()"
+      />
+    </div>
+    <div class="w-full flex gap-3 justify-start items-center">
+      <div class="truncate" matTooltip="Is this field required?">
+        Is this field required?
+      </div>
+      <input
+        class="w-4 h-4"
+        type="checkbox"
+        [(ngModel)]="selectedFormField().required"
+        placeholder="Enter required field or not"
+        (ngModelChange)="onChange()"
+      />
+    </div>
+    <div class="w-full gap-3 justify-start items-center">
+      <div class="truncate" matTooltip="Placeholder:">Placeholder:</div>
+      <input
+        class="w-full border border-stone-300 p-2 rounded"
+        [(ngModel)]="selectedFormField().placeholder"
+        placeholder="Enter placeholder"
+        (ngModelChange)="onChange()"
+      />
+    </div>
+    <div class="w-full gap-3 justify-start items-center">
+      <div class="truncate" matTooltip="Description:">Description:</div>
+      <textarea
+        class="w-full border border-stone-300 p-2 rounded"
+        [(ngModel)]="selectedFormField().description"
+        placeholder="Enter description"
+        (ngModelChange)="onChange()"
+      ></textarea>
+    </div>
+    @if (
+      selectedFormField().fieldType === "radio" ||
+      selectedFormField().fieldType === "checkbox" ||
+      selectedFormField().fieldType === "select"
+    ) {
+      <div class="w-full gap-3 justify-start items-center">
+        <div class="truncate" matTooltip="Default value:">Default value:</div>
+        <input
+          class="w-full border border-stone-300 p-2 rounded"
+          [(ngModel)]="selectedFormField().defaultValue"
+          placeholder="Enter default value"
+          (ngModelChange)="onChange()"
+        />
+      </div>
+      <div class="w-full gap-3 justify-start items-center">
+        <div class="flex justify-between items-center">
+          <div class="truncate" matTooltip="Add dropdown options:">
+            Add options:
+          </div>
+          <button class="cursor-pointer text-blue-600" (click)="onAddOption()">
+            Add
+          </button>
+        </div>
+        @for (option of dropdownOptions(); track $index; let idx = $index) {
+          <input
+            class="w-full border border-stone-300 p-2 rounded"
+            [value]="option"
+            placeholder="Enter dropdown options"
+            (change)="onOptionUpdate($event, idx)"
+          />
+          @if (dropdownOptions().length > 1) {
+            <button class="cursor-pointer" (click)="onDeleteOption(idx)">
+              Remove
+            </button>
+          }
+        }
+      </div>
+    }
+  </div>
+</div>
