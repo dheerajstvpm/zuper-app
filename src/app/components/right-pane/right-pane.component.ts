@@ -13,10 +13,12 @@ import {
   DragDropModule,
 } from '@angular/cdk/drag-drop';
 import { KeyValue, KeyValuePipe, NgClass } from '@angular/common';
+import { RightDrawerComponent } from "../right-drawer/right-drawer.component";
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-right-pane',
-  imports: [DragDropModule, KeyValuePipe, NgClass],
+  imports: [DragDropModule, KeyValuePipe, NgClass, RightDrawerComponent, MatTooltipModule],
   templateUrl: './right-pane.component.html',
   styleUrl: './right-pane.component.scss',
 })
@@ -24,7 +26,10 @@ export class RightPaneComponent {
   formBuilderService = inject(FormBuilderService);
   selectedFieldGroup: Signal<FieldGroup> =
     this.formBuilderService.selectedFieldGroup;
-  formFields: Signal<FormField[]> = this.formBuilderService.selectedGroupFields;
+  formFields: Signal<FormField[]> =
+    this.formBuilderService.selectedFieldGroupFields;
+  selectedFormFieldIndex: Signal<number> =
+    this.formBuilderService.selectedFormFieldIndex;
   availableFormFields: FormFieldTypes =
     this.formBuilderService.availableFormFields;
   droppedItem: string | undefined = undefined;
@@ -49,19 +54,31 @@ export class RightPaneComponent {
   }
 
   onCdkDropListExit(event: CdkDragExit) {
-    this.droppedItem = event.item.data.title;
+    this.droppedItem = event.item.data.fieldName;
   }
 
   removeDroppedItem() {
     this.droppedItem = undefined;
   }
 
+  onEdit(index: number) {
+    this.formBuilderService.selectedFormFieldIndex = index;
+  }
+
+  onDelete(index: number) {
+    this.formBuilderService.selectedFieldGroupFields = [
+      ...this.formBuilderService.selectedFieldGroupFields().slice(0, index),
+      ...this.formBuilderService.selectedFieldGroupFields().slice(index + 1),
+    ];
+    this.formBuilderService.selectedFormFieldIndex = -1;
+  }
+
   /**
    * Preserve order in key-value pipe
    */
   originalOrder = (
-    a: KeyValue<string, any>,
-    b: KeyValue<string, any>,
+    a: KeyValue<string, FormField[]>,
+    b: KeyValue<string, FormField[]>,
   ): number => {
     return 0;
   };
