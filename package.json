@@ -9,7 +9,7 @@
     "format": "npx prettier . --write",
     "404": "cp docs/index.html docs/404.html",
     "push": "git add . && git commit -m \"build files\" && git push",
-    "github": "pnpm run build && pnpm run move && pnpm run 404 && pnpm run push",
+    "github": "npm run format && npm run build && npm run move && npm run 404 && npm run push",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
