@@ -15,7 +15,7 @@
     >
       @for (item of formFields(); track $index; let idx = $index) {
         <div
-        (click)="onEdit(idx)"
+          (click)="onEdit(idx)"
           class="flex justify-between items-center"
           [ngClass]="item.class"
           cdkDrag

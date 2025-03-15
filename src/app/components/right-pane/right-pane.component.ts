@@ -13,12 +13,18 @@ import {
   DragDropModule,
 } from '@angular/cdk/drag-drop';
 import { KeyValue, KeyValuePipe, NgClass } from '@angular/common';
-import { RightDrawerComponent } from "../right-drawer/right-drawer.component";
+import { RightDrawerComponent } from '../right-drawer/right-drawer.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-right-pane',
-  imports: [DragDropModule, KeyValuePipe, NgClass, RightDrawerComponent, MatTooltipModule],
+  imports: [
+    DragDropModule,
+    KeyValuePipe,
+    NgClass,
+    RightDrawerComponent,
+    MatTooltipModule,
+  ],
   templateUrl: './right-pane.component.html',
   styleUrl: './right-pane.component.scss',
 })

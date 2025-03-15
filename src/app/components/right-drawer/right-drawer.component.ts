@@ -37,7 +37,7 @@ export class RightDrawerComponent {
   onOptionUpdate(event: Event, index: number) {
     const option = (event.target as HTMLInputElement).value;
     console.log(option);
-    
+
     this.formBuilderService.selectedFormField = {
       ...this.selectedFormField(),
       options: [
