@@ -18,80 +18,86 @@ export class FormBuilderService {
   private allFormFields: FormFieldTypes = {
     TEXT: [
       {
-        title: 'Single Line Text',
+        fieldName: 'Single Line Text:',
         required: false,
-        placeholder: '',
-        fieldName: 'input',
-        class: 'h-20 w-full bg-green-200',
+        placeholder: 'Single text area',
+        fieldType: 'input',
+        class: 'w-full border border-stone-300 p-2 rounded',
       },
       {
-        title: 'Multi Line Text',
+        fieldName: 'Multi Line Text:',
         required: false,
-        placeholder: '',
-        fieldName: 'text-area',
-        class: 'h-20 w-full',
+        placeholder: 'Multi text area',
+        fieldType: 'text-area',
+        class: 'w-full border border-stone-300 p-2 rounded',
       },
       {
-        title: 'Integer',
+        fieldName: 'Integer:',
         required: false,
-        placeholder: '',
-        fieldName: 'number',
-        class: 'h-20 w-full',
+        placeholder: 'Integer type area',
+        fieldType: 'number',
+        class: 'w-full border border-stone-300 p-2 rounded',
       },
     ],
     DATE: [
       {
-        title: 'Date',
+        fieldName: 'Date:',
         required: false,
-        placeholder: '',
-        fieldName: 'date',
-        class: 'h-20 w-full',
+        placeholder: 'Select date from datepicker',
+        fieldType: 'date',
+        class: 'w-full border border-stone-300 p-2 rounded',
       },
       {
-        title: 'Time',
+        fieldName: 'Time:',
         required: false,
-        placeholder: '',
-        fieldName: 'time',
-        class: 'h-20 w-full',
+        placeholder: 'Select time from timepicker',
+        fieldType: 'time',
+        class: 'w-full border border-stone-300 p-2 rounded',
       },
       {
-        title: 'Date & Time',
+        fieldName: 'Date & Time:',
         required: false,
-        placeholder: '',
-        fieldName: 'date-time',
-        class: 'h-20 w-full',
+        placeholder: 'Select date & time from picker',
+        fieldType: 'date-time',
+        class: 'w-full border border-stone-300 p-2 rounded',
       },
     ],
     MULTI: [
       {
-        title: 'Single Selection',
+        fieldName: 'Single Selection:',
         required: false,
-        placeholder: '',
-        fieldName: 'checkbox',
-        class: 'h-20 w-full',
+        placeholder: 'Select single option',
+        fieldType: 'radio',
+        options: ['Option-1', 'Option-2', 'Option-3'],
+        defaultValue: 'Option-2',
+        class: 'w-full border border-stone-300 p-2 rounded',
       },
       {
-        title: 'Multi Selection',
+        fieldName: 'Multi Selection:',
         required: false,
-        placeholder: '',
-        fieldName: 'radio-button',
-        class: 'h-20 w-full',
+        placeholder: 'Select multiple options',
+        fieldType: 'checkbox',
+        options: ['Option-1', 'Option-2', 'Option-3'],
+        defaultValue: 'Option-2',
+        class: 'w-full border border-stone-300 p-2 rounded',
       },
       {
-        title: 'Dropdown',
+        fieldName: 'Dropdown:',
         required: false,
-        placeholder: '',
-        fieldName: 'select',
-        class: 'h-20 w-full',
+        placeholder: 'Select options from dropdown',
+        fieldType: 'select',
+        options: ['Option-1', 'Option-2', 'Option-3'],
+        defaultValue: 'Option-2',
+        class: 'w-full border border-stone-300 p-2 rounded',
       },
     ],
     MEDIA: [
       {
-        title: 'Upload',
+        fieldName: 'Upload:',
         required: false,
-        placeholder: '',
-        fieldName: 'file',
-        class: 'h-20 w-full',
+        placeholder: 'Click to upload documents/media files',
+        fieldType: 'file',
+        class: 'w-full border border-stone-300 p-2 rounded',
       },
     ],
   };
@@ -101,38 +107,8 @@ export class FormBuilderService {
     { name: 'AMC Yearly', fields: [] },
     { name: 'AMC Installations - Tier 3', fields: [] },
   ]);
-  private selectedIndex: WritableSignal<number> = signal(0);
-  private selectedGroup: WritableSignal<FieldGroup> = linkedSignal(
-    () => this.allFieldGroups()[this.selectedIndex()],
-  );
-
-  set selectedFieldIndex(index: number) {
-    this.selectedIndex.set(index);
-    this.selectedGroup.set(this.allFieldGroups()[index]);
-  }
-
-  get selectedFieldGroup(): Signal<FieldGroup> {
-    return this.selectedGroup;
-  }
-
-  set selectedFieldGroup(fieldGroup: FieldGroup) {
-    this.allFieldGroups.set([
-      ...this.fieldGroups().slice(0, this.selectedIndex()),
-      fieldGroup,
-      ...this.fieldGroups().slice(this.selectedIndex() + 1),
-    ]);
-  }
-
-  get selectedGroupFields(): Signal<FormField[]> {
-    return linkedSignal(() => this.selectedGroup().fields);
-  }
-
-  set selectedGroupFields(fields: FormField[]) {
-    this.selectedFieldGroup = {
-      name: this.selectedFieldGroup().name,
-      fields,
-    };
-  }
+  private selectedGroupIndex: WritableSignal<number> = signal(0);
+  private selectedFieldIndex: WritableSignal<number> = signal(-1);
 
   get availableFormFields(): FormFieldTypes {
     return this.allFormFields;
@@ -144,6 +120,74 @@ export class FormBuilderService {
 
   set fieldGroups(fieldGroups: FieldGroup[]) {
     this.allFieldGroups.set(fieldGroups);
+    this.setLocalStorage();
+  }
+
+  get selectedFieldGroupIndex(): Signal<number> {
+    return this.selectedGroupIndex;
+  }
+
+  set selectedFieldGroupIndex(index: number) {
+    this.selectedGroupIndex.set(index);
+  }
+
+  get selectedFormFieldIndex(): Signal<number> {
+    return this.selectedFieldIndex;
+  }
+
+  set selectedFormFieldIndex(index: number) {
+    this.selectedFieldIndex.set(index);
+  }
+
+  get selectedFieldGroup(): Signal<FieldGroup> {
+    return linkedSignal(() => this.allFieldGroups()[this.selectedGroupIndex()]);
+  }
+
+  set selectedFieldGroup(fieldGroup: FieldGroup) {
+    this.fieldGroups = [
+      ...this.fieldGroups().slice(0, this.selectedGroupIndex()),
+      fieldGroup,
+      ...this.fieldGroups().slice(this.selectedGroupIndex() + 1),
+    ];
+  }
+
+  get selectedFieldGroupFields(): Signal<FormField[]> {
+    return linkedSignal(
+      () => this.allFieldGroups()[this.selectedGroupIndex()].fields,
+    );
+  }
+
+  set selectedFieldGroupFields(fields: FormField[]) {
+    this.selectedFieldGroup = {
+      ...this.selectedFieldGroup(),
+      fields,
+    };
+  }
+
+  get selectedFormField(): Signal<FormField> {
+    return linkedSignal(
+      () =>
+        this.allFieldGroups()[this.selectedGroupIndex()].fields[
+          this.selectedFieldIndex()
+        ],
+    );
+  }
+
+  set selectedFormField(formField: FormField) {
+    this.selectedFieldGroupFields = [
+      ...this.selectedFieldGroupFields().slice(0, this.selectedFieldIndex()),
+      formField,
+      ...this.selectedFieldGroupFields().slice(this.selectedFieldIndex() + 1),
+    ];
+  }
+
+  get dropdownOptions(): Signal<string[]> {
+    return linkedSignal(
+      () =>
+        this.allFieldGroups()[this.selectedGroupIndex()].fields[
+          this.selectedFieldIndex()
+        ].options ?? [''],
+    );
   }
 
   setLocalStorage() {
