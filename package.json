@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --base-href /zuper-app/",
     "move": "mv dist/zuper-app/browser/* docs/",
     "format": "npx prettier . --write",
     "404": "cp docs/index.html docs/404.html",
