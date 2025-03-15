@@ -1,1 +1,46 @@
-<p>right-pane works!</p>
+<div class="h-full w-full flex justify-stretch items-start">
+  <div class="h-full w-3/4 flex flex-col justify-start items-start">
+    <div>{{ selectedFieldGroup().name }}</div>
+    <div
+      class="h-full w-full flex flex-col justify-start items-start"
+      cdkDropList
+      #fieldGroup="cdkDropList"
+      [cdkDropListData]="formFields()"
+      (cdkDropListDropped)="onCdkDropListDrop($event)"
+    >
+      @for (item of formFields(); track $index) {
+        <div [ngClass]="item.class" cdkDrag>
+          <p>{{ item.title }}</p>
+        </div>
+      }
+    </div>
+  </div>
+  <div class="h-full w-1/4 flex flex-col justify-start items-start">
+    @for (
+      formFields of availableFormFields | keyvalue: originalOrder;
+      track $index
+    ) {
+      <div
+        cdkDropList
+        #formFieldList="cdkDropList"
+        [cdkDropListData]="formFields.value"
+        cdkDropListSortingDisabled
+        [cdkDropListConnectedTo]="[fieldGroup]"
+        (cdkDropListExited)="onCdkDropListExit($event)"
+        (cdkDropListEntered)="removeDroppedItem()"
+      >
+        {{ formFields.key }}
+        @for (formField of formFields.value; track $index) {
+          <div class="h-10 w-full">
+            <div cdkDrag [cdkDragData]="formField.title">
+              {{ formField.title }}
+            </div>
+            @if (droppedItem === formField.title) {
+              <div>{{ formField.title }}</div>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>
