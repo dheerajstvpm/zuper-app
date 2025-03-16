@@ -3,16 +3,16 @@ import {
   Component,
   inject,
   Signal,
-  WritableSignal,
 } from '@angular/core';
 import { FormBuilderService } from '../../services/form-builder.service';
 import { FieldGroup } from '../../models/form-builder.model';
 import { NgClass } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-left-pane',
-  imports: [NgClass, MatTooltipModule],
+  imports: [NgClass, MatTooltipModule, MatIconModule],
   templateUrl: './left-pane.component.html',
   styleUrl: './left-pane.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,7 +20,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 export class LeftPaneComponent {
   formBuilderService = inject(FormBuilderService);
   fieldGroups: Signal<FieldGroup[]> = this.formBuilderService.fieldGroups;
-  selectedFieldIndex: Signal<number> =
+  selectedFieldGroupIndex: Signal<number> =
     this.formBuilderService.selectedFieldGroupIndex;
   editEnabled: { [key: number]: boolean } = {};
 

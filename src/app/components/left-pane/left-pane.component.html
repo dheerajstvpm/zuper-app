@@ -6,17 +6,18 @@
     >
       Field Groups
     </div>
-    <button
-      class="text-nowrap text-blue-600 cursor-pointer"
+    <div
+      class="flex justify-between items-center text-nowrap text-blue-500 cursor-pointer"
       matTooltip="Create new"
       (click)="onAdd()"
     >
+      <mat-icon fontIcon="add_circle"></mat-icon>
       Create new
-    </button>
+    </div>
   </div>
   <div class="w-full flex-1 flex flex-col gap-2 overflow-auto">
     @for (fieldGroup of fieldGroups(); track $index; let idx = $index) {
-      @if (editEnabled[idx] && idx === selectedFieldIndex()) {
+      @if (editEnabled[idx] && idx === selectedFieldGroupIndex()) {
         <input
           class="border border-stone-300 rounded px-3 py-2"
           type="text"
@@ -26,7 +27,7 @@
       } @else {
         <div
           [ngClass]="
-            idx === selectedFieldIndex()
+            idx === selectedFieldGroupIndex()
               ? 'bg-blue-100 border border-blue-600 text-blue-600'
               : 'border border-stone-300'
           "
@@ -36,20 +37,20 @@
           <div class="truncate px-3 py-2" [matTooltip]="fieldGroup.name">
             {{ fieldGroup.name }}
           </div>
-          <div class="flex gap-2 justify-between items-center px-3 py-2">
+          <div class="flex gap-2 justify-between items-center px-3 py-2 text-stone-600">
             <button
-              class="text-blue-600 cursor-pointer"
+              class="cursor-pointer"
               (click)="onEdit(idx); $event.stopPropagation()"
               matTooltip="Edit"
             >
-              Edit
+              <mat-icon fontIcon="edit"></mat-icon>
             </button>
             <button
-              class="text-blue-600 cursor-pointer"
+              class="cursor-pointer"
               (click)="onDelete(idx); $event.stopPropagation()"
               matTooltip="Delete"
             >
-              Delete
+              <mat-icon fontIcon="delete"></mat-icon>
             </button>
           </div>
         </div>

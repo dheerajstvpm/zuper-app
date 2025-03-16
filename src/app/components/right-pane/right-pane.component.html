@@ -1,5 +1,26 @@
 <div class="h-full w-full flex justify-stretch items-start text-sm">
-  <div class="h-full w-3/4 flex flex-col gap-3 justify-start items-center p-4">
+  <div
+    class="relative h-full w-3/4 flex flex-col gap-3 justify-start items-center p-4"
+  >
+    <div
+      class="absolute bottom-2 right-2 flex justify-between items-center gap-2"
+    >
+      <div
+        (click)="exportJson()"
+        class="h-10 flex justify-center items-center rounded bg-blue-400 p-2"
+        matTooltip="Export form configurations as a JSON file."
+      >
+        <mat-icon fontIcon="publish"></mat-icon>
+      </div>
+
+      <label
+        matTooltip="Import a JSON file to recreate a saved configuration."
+        class="h-10 rounded bg-blue-400 p-2 border border-stone-300 p-2 rounded inline-block cursor-pointer"
+      >
+        <mat-icon fontIcon="download"> </mat-icon>
+        <input class="hidden" type="file" (change)="importJson($event)" />
+      </label>
+    </div>
     <div
       class="truncate w-full max-w-[720px] bg-white rounded p-3"
       [matTooltip]="selectedFieldGroup().name"
@@ -16,16 +37,21 @@
       @for (item of formFields(); track $index; let idx = $index) {
         <div
           (click)="onEdit(idx)"
-          class="flex justify-between items-center"
+          class="relative w-full flex justify-start items-center gap-2 cursor-all-scroll truncate border border-stone-300 rounded"
           [ngClass]="item.class"
           cdkDrag
         >
-          <div>
-            <p class="truncate" [matTooltip]="item.fieldName">
+          <div
+            class="h-full flex justify-center items-center border-r-1 border-stone-300 text-stone-500"
+          >
+            <mat-icon fontIcon="drag_indicator"></mat-icon>
+          </div>
+          <div class="w-full p-2">
+            <p class="w-full truncate" [matTooltip]="item.fieldName">
               {{ item.fieldName }}
             </p>
             <p
-              class="truncate text-sm text-stone-300"
+              class="w-full truncate text-sm text-stone-300"
               [matTooltip]="item.description"
             >
               {{ item.description }}
@@ -70,7 +96,7 @@
             } @else if (item.fieldType === "radio") {
               <div class="w-full flex flex-col justify-start items-start gap-2">
                 @for (option of item.options; track $index) {
-                  <div class="flex justify-start items-center gap-2">
+                  <div class="w-full flex justify-start items-center gap-2">
                     <input
                       class="w-4 h-4 border border-stone-300 p-2 rounded"
                       type="radio"
@@ -81,7 +107,7 @@
                       [placeholder]="item.placeholder"
                     />
                     <label
-                      class="truncate"
+                      class="flex-1 truncate"
                       [matTooltip]="option"
                       [for]="option"
                       >{{ option }}</label
@@ -92,7 +118,7 @@
             } @else if (item.fieldType === "checkbox") {
               <div class="w-full flex flex-col justify-start items-start gap-3">
                 @for (option of item.options; track $index) {
-                  <div class="flex justify-start items-center gap-2">
+                  <div class="w-full flex justify-start items-center gap-2">
                     <input
                       class="w-4 h-4 border border-stone-300 p-2 rounded"
                       type="checkbox"
@@ -103,7 +129,7 @@
                       [placeholder]="item.placeholder"
                     />
                     <label
-                      class="truncate"
+                      class="flex-1 truncate"
                       [matTooltip]="option"
                       [for]="option"
                       >{{ option }}</label
@@ -120,7 +146,7 @@
               >
                 @for (option of item.options; track $index) {
                   <option
-                    class="truncate"
+                    class="w-72 truncate"
                     [matTooltip]="option"
                     [value]="option"
                     [selected]="option === item.defaultValue"
@@ -142,12 +168,14 @@
               </label>
             }
           </div>
-          <div class="flex justify-end items-center gap-2">
+          <div
+            class="absolute top-2 right-2 flex justify-end items-center gap-2"
+          >
             <button
-              class="text-blue-600 cursor-pointer"
+              class="text-stone-600 cursor-pointer"
               (click)="onDelete(idx); $event.stopPropagation()"
             >
-              Delete
+              <mat-icon fontIcon="delete"></mat-icon>
             </button>
           </div>
         </div>
@@ -187,14 +215,22 @@
             </div>
             @for (formField of formFields.value; track $index) {
               <div
-                class="h-10 w-full flex justify-start items-center text-stone-500 font-semibold cursor-pointer border border-stone-300 rounded p-2"
+                class="h-10 w-full flex justify-start items-center gap-2 text-stone-500 font-semibold cursor-all-scroll border border-stone-300 rounded"
               >
                 <div
-                  class="w-full flex flex-col justify-center items-start"
+                  class="h-full flex justify-center items-center border-r-1 border-stone-300 text-stone-500"
+                >
+                  <mat-icon fontIcon="drag_indicator"></mat-icon>
+                </div>
+                <div
+                  class="w-full truncate flex flex-col justify-center items-start p-2"
                   cdkDrag
                   [cdkDragData]="formField"
                 >
-                  <div class="truncate" [matTooltip]="formField.fieldName">
+                  <div
+                    class="w-full truncate"
+                    [matTooltip]="formField.fieldName"
+                  >
                     {{ formField.fieldName }}
                   </div>
                   <div
@@ -206,7 +242,7 @@
                 </div>
                 @if (droppedItem === formField.fieldName) {
                   <div
-                    class="truncate w-full flex flex-col justify-center items-start"
+                    class="truncate w-full flex flex-col justify-center items-start p-2"
                     [matTooltip]="formField.fieldName"
                   >
                     <div>{{ formField.fieldName }}</div>
