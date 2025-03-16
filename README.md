@@ -1,5 +1,11 @@
 # ZuperApp
 
+To run this project locally first clone the project using
+1. git clone https://github.com/dheerajstvpm/zuper-app.git
+2. cd zuper-app
+3. npm i
+4. ng serve
+
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.4.
 
 ## Development server
