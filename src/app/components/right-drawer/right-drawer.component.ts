@@ -3,11 +3,11 @@ import { FormBuilderService } from '../../services/form-builder.service';
 import { FormField } from '../../models/form-builder.model';
 import { FormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import {MatIconModule} from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-right-drawer',
-  imports: [FormsModule, MatTooltipModule,MatIconModule],
+  imports: [FormsModule, MatTooltipModule, MatIconModule],
   templateUrl: './right-drawer.component.html',
   styleUrl: './right-drawer.component.scss',
 })
