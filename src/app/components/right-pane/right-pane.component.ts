@@ -15,10 +15,12 @@ import {
 import { KeyValue, KeyValuePipe, NgClass } from '@angular/common';
 import { RightDrawerComponent } from '../right-drawer/right-drawer.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-right-pane',
   imports: [
+    MatIconModule,
     DragDropModule,
     KeyValuePipe,
     NgClass,
@@ -29,7 +31,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   styleUrl: './right-pane.component.scss',
 })
 export class RightPaneComponent {
-  formBuilderService = inject(FormBuilderService);
+  private formBuilderService = inject(FormBuilderService);
   selectedFieldGroup: Signal<FieldGroup> =
     this.formBuilderService.selectedFieldGroup;
   formFields: Signal<FormField[]> =
@@ -77,6 +79,14 @@ export class RightPaneComponent {
       ...this.formBuilderService.selectedFieldGroupFields().slice(index + 1),
     ];
     this.formBuilderService.selectedFormFieldIndex = -1;
+  }
+
+  exportJson() {
+    this.formBuilderService.exportJson();
+  }
+
+  importJson(event: Event) {
+    this.formBuilderService.importJson(event);
   }
 
   /**

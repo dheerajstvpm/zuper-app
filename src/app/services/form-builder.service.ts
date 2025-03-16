@@ -1,4 +1,5 @@
 import {
+  inject,
   Injectable,
   linkedSignal,
   Signal,
@@ -10,11 +11,13 @@ import {
   FormField,
   FormFieldTypes,
 } from '../models/form-builder.model';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FormBuilderService {
+  private sanitizer = inject(DomSanitizer);
   private allFormFields: FormFieldTypes = {
     TEXT: [
       {
@@ -22,21 +25,21 @@ export class FormBuilderService {
         required: false,
         placeholder: 'Single text area',
         fieldType: 'input',
-        class: 'w-full border border-stone-300 p-2 rounded',
+        class: '',
       },
       {
         fieldName: 'Multi Line Text:',
         required: false,
         placeholder: 'Multi text area',
         fieldType: 'text-area',
-        class: 'w-full border border-stone-300 p-2 rounded',
+        class: '',
       },
       {
         fieldName: 'Integer:',
         required: false,
         placeholder: 'Integer type area',
         fieldType: 'number',
-        class: 'w-full border border-stone-300 p-2 rounded',
+        class: '',
       },
     ],
     DATE: [
@@ -45,21 +48,21 @@ export class FormBuilderService {
         required: false,
         placeholder: 'Select date from datepicker',
         fieldType: 'date',
-        class: 'w-full border border-stone-300 p-2 rounded',
+        class: '',
       },
       {
         fieldName: 'Time:',
         required: false,
         placeholder: 'Select time from timepicker',
         fieldType: 'time',
-        class: 'w-full border border-stone-300 p-2 rounded',
+        class: '',
       },
       {
         fieldName: 'Date & Time:',
         required: false,
         placeholder: 'Select date & time from picker',
         fieldType: 'date-time',
-        class: 'w-full border border-stone-300 p-2 rounded',
+        class: '',
       },
     ],
     MULTI: [
@@ -70,7 +73,7 @@ export class FormBuilderService {
         fieldType: 'radio',
         options: ['Option-1', 'Option-2', 'Option-3'],
         defaultValue: 'Option-2',
-        class: 'w-full border border-stone-300 p-2 rounded',
+        class: '',
       },
       {
         fieldName: 'Multi Selection:',
@@ -79,7 +82,7 @@ export class FormBuilderService {
         fieldType: 'checkbox',
         options: ['Option-1', 'Option-2', 'Option-3'],
         defaultValue: 'Option-2',
-        class: 'w-full border border-stone-300 p-2 rounded',
+        class: '',
       },
       {
         fieldName: 'Dropdown:',
@@ -88,7 +91,7 @@ export class FormBuilderService {
         fieldType: 'select',
         options: ['Option-1', 'Option-2', 'Option-3'],
         defaultValue: 'Option-2',
-        class: 'w-full border border-stone-300 p-2 rounded',
+        class: '',
       },
     ],
     MEDIA: [
@@ -97,7 +100,7 @@ export class FormBuilderService {
         required: false,
         placeholder: 'Click to upload documents/media files',
         fieldType: 'file',
-        class: 'w-full border border-stone-300 p-2 rounded',
+        class: '',
       },
     ],
   };
@@ -140,7 +143,13 @@ export class FormBuilderService {
   }
 
   get selectedFieldGroup(): Signal<FieldGroup> {
-    return linkedSignal(() => this.allFieldGroups()[this.selectedGroupIndex()]);
+    return linkedSignal(
+      () =>
+        this.allFieldGroups()[this.selectedGroupIndex()] ?? {
+          name: '',
+          fields: [],
+        },
+    );
   }
 
   set selectedFieldGroup(fieldGroup: FieldGroup) {
@@ -152,9 +161,7 @@ export class FormBuilderService {
   }
 
   get selectedFieldGroupFields(): Signal<FormField[]> {
-    return linkedSignal(
-      () => this.allFieldGroups()[this.selectedGroupIndex()].fields,
-    );
+    return linkedSignal(() => this.selectedFieldGroup().fields);
   }
 
   set selectedFieldGroupFields(fields: FormField[]) {
@@ -166,10 +173,7 @@ export class FormBuilderService {
 
   get selectedFormField(): Signal<FormField> {
     return linkedSignal(
-      () =>
-        this.allFieldGroups()[this.selectedGroupIndex()].fields[
-          this.selectedFieldIndex()
-        ],
+      () => this.selectedFieldGroupFields()[this.selectedFieldIndex()],
     );
   }
 
@@ -182,12 +186,7 @@ export class FormBuilderService {
   }
 
   get dropdownOptions(): Signal<string[]> {
-    return linkedSignal(
-      () =>
-        this.allFieldGroups()[this.selectedGroupIndex()].fields[
-          this.selectedFieldIndex()
-        ].options ?? [''],
-    );
+    return linkedSignal(() => this.selectedFormField().options ?? ['']);
   }
 
   setLocalStorage() {
@@ -198,6 +197,32 @@ export class FormBuilderService {
       );
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  exportJson() {
+    const jsonString = JSON.stringify(this.fieldGroups());
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'zuper_configuration.json';
+    a.click();
+    window.URL.revokeObjectURL(url);
+  }
+
+  importJson(event: Event) {
+    const files = (event.target as HTMLInputElement).files;
+    if (files?.length) {
+      const fileReader = new FileReader();
+      fileReader.readAsText(files[0], 'UTF-8');
+      fileReader.onloadend = () => {
+        const jsonString = fileReader.result as string;
+        this.fieldGroups = JSON.parse(jsonString);
+      };
+      fileReader.onerror = (error) => {
+        console.log(error);
+      };
     }
   }
 }
