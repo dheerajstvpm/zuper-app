@@ -37,7 +37,7 @@
       @for (item of formFields(); track $index; let idx = $index) {
         <div
           (click)="onEdit(idx)"
-          class="relative w-full flex justify-start items-center gap-2 cursor-all-scroll truncate border border-stone-300 rounded"
+          class="relative w-full flex justify-start items-center gap-2 cursor-all-scroll border border-stone-300 rounded"
           [ngClass]="item.class"
           cdkDrag
         >
