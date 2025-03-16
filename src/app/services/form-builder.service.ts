@@ -98,6 +98,7 @@ export class FormBuilderService {
       {
         fieldName: 'Upload:',
         required: false,
+        description: 'Click to upload documents/media files',
         placeholder: 'Click to upload documents/media files',
         fieldType: 'file',
         class: '',

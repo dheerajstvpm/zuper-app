@@ -155,17 +155,14 @@
                   </option>
                 }
               </select>
-            } @else if (item.fieldType === "file") {
-              <label
-                class="w-72 border border-stone-300 p-2 rounded inline-block cursor-pointer"
-              >
-                {{ item.placeholder }}
-                <input
-                  class="hidden"
-                  type="file"
-                  [placeholder]="item.placeholder"
-                />
-              </label>
+            } @else {
+              <input
+                type="file"
+                id="upload-file"
+                name="upload-file"
+                [placeholder]="item.placeholder"
+                class="pt-2 text-sm text-stone-500 file:mr-5 file:py-1 file:px-3 file:border-[1px] file:rounded file:text-xs file:font-medium file:bg-stone-50 file:text-stone-700 hover:file:cursor-pointer hover:file:bg-blue-50 hover:file:text-blue-700"
+              />
             }
           </div>
           <div
