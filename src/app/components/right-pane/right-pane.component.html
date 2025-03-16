@@ -16,7 +16,7 @@
       @for (item of formFields(); track $index; let idx = $index) {
         <div
           (click)="onEdit(idx)"
-          class="flex justify-between items-center overflow-auto"
+          class="flex justify-between items-center"
           [ngClass]="item.class"
           cdkDrag
         >
@@ -68,43 +68,47 @@
                 [placeholder]="item.placeholder"
               />
             } @else if (item.fieldType === "radio") {
-              <div class="w-full flex justify-start items-center gap-3">
+              <div class="w-full flex flex-col justify-start items-start gap-2">
                 @for (option of item.options; track $index) {
-                  <input
-                    class="w-4 h-4 border border-stone-300 p-2 rounded"
-                    type="radio"
-                    [id]="option"
-                    [value]="option"
-                    [name]="item.fieldName"
-                    [checked]="option === item.defaultValue"
-                    [placeholder]="item.placeholder"
-                  />
-                  <label
-                    class="truncate"
-                    [matTooltip]="option"
-                    [for]="option"
-                    >{{ option }}</label
-                  >
+                  <div class="flex justify-start items-center gap-2">
+                    <input
+                      class="w-4 h-4 border border-stone-300 p-2 rounded"
+                      type="radio"
+                      [id]="option"
+                      [value]="option"
+                      [name]="item.fieldName"
+                      [checked]="option === item.defaultValue"
+                      [placeholder]="item.placeholder"
+                    />
+                    <label
+                      class="truncate"
+                      [matTooltip]="option"
+                      [for]="option"
+                      >{{ option }}</label
+                    >
+                  </div>
                 }
               </div>
             } @else if (item.fieldType === "checkbox") {
-              <div class="w-full flex justify-start items-center gap-3">
+              <div class="w-full flex flex-col justify-start items-start gap-3">
                 @for (option of item.options; track $index) {
-                  <input
-                    class="w-4 h-4 border border-stone-300 p-2 rounded"
-                    type="checkbox"
-                    [id]="option"
-                    [value]="option"
-                    [name]="item.fieldName"
-                    [checked]="option === item.defaultValue"
-                    [placeholder]="item.placeholder"
-                  />
-                  <label
-                    class="truncate"
-                    [matTooltip]="option"
-                    [for]="option"
-                    >{{ option }}</label
-                  >
+                  <div class="flex justify-start items-center gap-2">
+                    <input
+                      class="w-4 h-4 border border-stone-300 p-2 rounded"
+                      type="checkbox"
+                      [id]="option"
+                      [value]="option"
+                      [name]="item.fieldName"
+                      [checked]="option === item.defaultValue"
+                      [placeholder]="item.placeholder"
+                    />
+                    <label
+                      class="truncate"
+                      [matTooltip]="option"
+                      [for]="option"
+                      >{{ option }}</label
+                    >
+                  </div>
                 }
               </div>
             } @else if (item.fieldType === "select") {
@@ -173,17 +177,17 @@
             [cdkDropListConnectedTo]="[fieldGroup]"
             (cdkDropListExited)="onCdkDropListExit($event)"
             (cdkDropListEntered)="removeDroppedItem()"
-            class="w-full border-b-1 border-stone-300 p-3"
+            class="w-full border-t-1 border-stone-300 p-3 flex flex-col justify-start items-start gap-2"
           >
             <div
-              class="truncate w-full flex flex-col gap-2 justify-start items-start text-stone-400 text-xs font-bold pb-3"
+              class="truncate w-full flex flex-col gap-2 justify-start items-start text-stone-400 text-xs font-bold"
               [matTooltip]="formFields.key"
             >
               {{ formFields.key }}
             </div>
             @for (formField of formFields.value; track $index) {
               <div
-                class="h-10 w-full flex justify-start items-center text-stone-500 font-semibold cursor-pointer"
+                class="h-10 w-full flex justify-start items-center text-stone-500 font-semibold cursor-pointer border border-stone-300 rounded p-2"
               >
                 <div
                   class="w-full flex flex-col justify-center items-start"
