@@ -1,6 +1,7 @@
 # ZuperApp
 
 To run this project locally first clone the project using
+
 1. git clone https://github.com/dheerajstvpm/zuper-app.git
 2. cd zuper-app
 3. npm i
